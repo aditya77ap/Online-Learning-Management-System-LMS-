@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Run LMS",
+            "request": "launch",
+            "mainClass": "com.lms.main.Main",
+            "projectName": "Project LMS",
+            "classPaths": [
+                "$Auto",
+                "${workspaceFolder}/lib/*.jar"
+            ]
+        }
+    ]
+}
