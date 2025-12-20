@@ -8,35 +8,46 @@ import java.util.List;
 
 public class UserDAO {
 
-    public User login(String email, String password) {
-        String sql = "SELECT * FROM users WHERE email = ? AND password = ?";
+    public User login(String identifier, String password) {
+        String sql = "SELECT * FROM users WHERE (email = ? OR enrollment_no = ?) AND password = ?";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
-            stmt.setString(1, email);
-            stmt.setString(2, password);
+
+            System.out.println("Attempting login for: " + identifier);
+            stmt.setString(1, identifier);
+            stmt.setString(2, identifier);
+            stmt.setString(3, password);
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
-                return new User(
+                User user = new User(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("email"),
+                        rs.getString("enrollment_no"),
                         rs.getString("password"),
                         rs.getString("role"));
+                System.out.println("✓ Login successful for: " + user.getName() + " (" + user.getRole() + ")");
+                return user;
+            } else {
+                System.out.println("✗ Login failed: Invalid credentials for " + identifier);
+                return null;
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.err.println("✗ Login failed: Database error");
+            throw new RuntimeException("Database error: " + e.getMessage(), e);
         }
-        return null;
     }
 
     public boolean register(User user) {
-        String sql = "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO users (name, email, enrollment_no, password, role) VALUES (?, ?, ?, ?, ?)";
         try (Connection conn = DBConnection.getConnection();
                 PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, user.getName());
             stmt.setString(2, user.getEmail());
-            stmt.setString(3, user.getPassword());
-            stmt.setString(4, user.getRole());
+            stmt.setString(3, user.getEnrollmentNo());
+            stmt.setString(4, user.getPassword());
+            stmt.setString(5, user.getRole());
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
@@ -55,6 +66,7 @@ public class UserDAO {
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("email"),
+                        rs.getString("enrollment_no"),
                         rs.getString("password"),
                         rs.getString("role")));
             }

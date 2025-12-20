@@ -28,14 +28,14 @@ if exist "C:\Program Files\MySQL\MySQL Server 8.0\bin\mysql.exe" (
 echo Found MySQL at: %MYSQL_PATH%
 echo.
 
-"%MYSQL_PATH%" -u root -ppassword -e "DROP DATABASE IF EXISTS lms_db; CREATE DATABASE lms_db;"
-"%MYSQL_PATH%" -u root -ppassword lms_db < "database.sql"
+"%MYSQL_PATH%" -u root -p@@Abhipriya12@@ -e "DROP DATABASE IF EXISTS lms_db; CREATE DATABASE lms_db;"
+"%MYSQL_PATH%" -u root -p@@Abhipriya12@@ lms_db < "database.sql"
 
 echo.
 echo Database reset complete!
 echo You can now login with:
-echo   Admin: admin@lms.com / admin123
-echo   Instructor: instructor@lms.com / instructor123
-echo   Student: student@lms.com / student123
+echo   Admin: rajeshkumar@lms.com / admin123
+echo   Instructor: priyasharma@lms.com / instructor123
+echo   Student: arjunpatel@lms.com / student123
 echo.
 pause

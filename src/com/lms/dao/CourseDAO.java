@@ -93,4 +93,38 @@ public class CourseDAO {
         }
         return courses;
     }
+
+    public boolean deleteCourse(int courseId) {
+        String sql = "DELETE FROM courses WHERE id = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, courseId);
+            return stmt.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<com.lms.model.User> getEnrolledStudents(int courseId) {
+        List<com.lms.model.User> students = new ArrayList<>();
+        String sql = "SELECT u.* FROM users u JOIN enrollments e ON u.id = e.student_id WHERE e.course_id = ?";
+        try (Connection conn = DBConnection.getConnection();
+                PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setInt(1, courseId);
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                students.add(new com.lms.model.User(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("email"),
+                        rs.getString("enrollment_no"),
+                        rs.getString("password"),
+                        rs.getString("role")));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return students;
+    }
 }
